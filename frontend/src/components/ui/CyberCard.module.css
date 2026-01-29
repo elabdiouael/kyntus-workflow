@@ -1,0 +1,79 @@
+.container {
+  perspective: 1000px; /* Profondeur 3D */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.card {
+  width: 600px;
+  height: 350px;
+  position: relative;
+  border-radius: 20px;
+  background: rgba(10, 15, 30, 0.8); /* Fond sombre */
+  border: 1px solid rgba(0, 242, 234, 0.3); /* Bordure Cyan */
+  box-shadow: 0 0 30px rgba(0, 112, 243, 0.2); /* Glow Bleu initial */
+  transform-style: preserve-3d; /* Active la 3D */
+  transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hover Effect: Glow Mjehed */
+.card:hover {
+  box-shadow: 0 0 50px rgba(0, 242, 234, 0.4), inset 0 0 20px rgba(0, 242, 234, 0.1);
+  border-color: #00f2ea;
+}
+
+/* Matrix Background (Derrière le texte) */
+.matrixLayer {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0;
+}
+
+/* Contenu (Flotte au dessus) */
+.content {
+  z-index: 10;
+  transform: translateZ(60px); /* Sort de l'écran */
+  text-align: center;
+  pointer-events: none; /* Laisse la souris passer */
+}
+
+.icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 20px rgba(0, 112, 243, 0.8));
+  animation: float 3s ease-in-out infinite;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px rgba(0, 242, 234, 0.6);
+  margin: 0;
+}
+
+.subtitle {
+  color: #00f2ea;
+  font-family: monospace;
+  font-size: 1.1rem;
+  margin-top: 10px;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 15px;
+  border-radius: 50px;
+  border: 1px solid rgba(0, 242, 234, 0.3);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}

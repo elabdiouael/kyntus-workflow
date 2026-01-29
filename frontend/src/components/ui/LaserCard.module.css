@@ -1,0 +1,115 @@
+.cardWrapper {
+  position: relative;
+  /* Forme Cyberpunk (Coins coupés) */
+  clip-path: polygon(
+    20px 0, 100% 0, 
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 
+    0 100%, 0 20px
+  );
+  background: rgba(8, 10, 15, 0.6); /* Fond très sombre mais transparent */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  min-height: 200px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden; /* Important pour le scanner */
+}
+
+/* --- BORDERS TECH --- */
+/* Bordure colorée juste sur les coins coupés */
+.cardWrapper::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  background: linear-gradient(135deg, var(--laser-color) 0%, transparent 20%, transparent 80%, var(--laser-color) 100%);
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+/* --- SCANNER EFFECT (Hologramme) --- */
+.scanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px; /* Ligne fine */
+  background: var(--laser-color);
+  opacity: 0.5;
+  filter: blur(10px);
+  box-shadow: 0 0 20px var(--laser-color);
+  animation: scan 4s linear infinite;
+  z-index: 0;
+}
+
+@keyframes scan {
+  0% { top: -20%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 120%; opacity: 0; }
+}
+
+/* --- GRID BACKGROUND --- */
+.gridOverlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* --- HOVER EFFECTS (Tfergui3) --- */
+.cardWrapper:hover {
+  transform: translateY(-5px) scale(1.02);
+  background: rgba(8, 10, 15, 0.8);
+  box-shadow: 0 10px 40px -10px var(--laser-color); /* Grand Glow */
+  border-color: var(--laser-color);
+}
+
+.cardWrapper:hover::before {
+  opacity: 0.8; /* Les coins s'allument */
+}
+
+.cardWrapper:hover .iconBox {
+  transform: scale(1.1) rotate(5deg);
+  border-color: var(--laser-color);
+  background: var(--laser-color);
+  color: black; /* Contraste High-Tech */
+  box-shadow: 0 0 30px var(--laser-color);
+}
+
+/* --- CONTENU --- */
+.content {
+  padding: 25px;
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.iconBox {
+  width: 50px; height: 50px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.3);
+  display: flex; justify-content: center; align-items: center;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: var(--laser-color);
+}
+
+/* Décoration "Tech" (Petits numéros en bas) */
+.techDecor {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  font-family: monospace;
+  font-size: 0.6rem;
+  color: var(--laser-color);
+  opacity: 0.5;
+  letter-spacing: 2px;
+}

@@ -1,0 +1,159 @@
+.board {
+  display: flex;
+  gap: 30px;
+  height: calc(100vh - 180px); /* Hauteur parfaite */
+  overflow-x: auto;
+  padding: 10px;
+  align-items: flex-start;
+}
+
+/* --- COLONNES (Holographic Pods) --- */
+.column {
+  flex: 1;
+  min-width: 320px;
+  max-width: 400px;
+  background: rgba(10, 15, 25, 0.4); /* Tres transparent */
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+/* Neon Top Border selon le statut */
+.col_A_FAIRE { border-top: 4px solid var(--status-warning); box-shadow: 0 -10px 30px rgba(245, 166, 35, 0.1); }
+.col_EN_COURS { border-top: 4px solid var(--neon-cyan); box-shadow: 0 -10px 30px rgba(0, 242, 234, 0.1); }
+.col_DONE { border-top: 4px solid var(--neon-green); box-shadow: 0 -10px 30px rgba(57, 255, 20, 0.1); }
+
+/* Background Grid dans la colonne */
+.column::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.header {
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: rgba(0,0,0,0.2);
+}
+
+.count {
+  background: rgba(255,255,255,0.1);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: monospace;
+}
+
+/* Zone de Drop */
+.droppableArea {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: background 0.2s;
+}
+
+/* Effet quand on survole avec une carte */
+.droppableArea.dragOver {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+}
+
+/* --- CARTE (Cyber-Plate) --- */
+.card {
+  background: rgba(20, 25, 35, 0.9);
+  padding: 20px;
+  position: relative;
+  /* Forme Cyberpunk Coupée */
+  clip-path: polygon(
+    15px 0, 100% 0, 
+    100% calc(100% - 15px), calc(100% - 15px) 100%, 
+    0 100%, 0 15px
+  );
+  border-left: 4px solid var(--border-color, #555); /* Couleur dynamique */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  cursor: grab;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  color: white;
+}
+
+/* Bordure décorative fine */
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  pointer-events: none;
+  z-index: 1;
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  background: rgba(30, 35, 50, 1);
+  box-shadow: 0 10px 30px rgba(0, 242, 234, 0.15); /* Glow Cyan */
+  z-index: 10;
+}
+
+.card:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--neon-cyan);
+}
+
+.eps {
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: white;
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.cardBody {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.miniInfo {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(255,255,255,0.1);
+  padding-bottom: 4px;
+}
+
+.label { text-transform: uppercase; font-size: 0.7rem; color: #666; font-weight: bold; }
+.value { color: #eee; }
+
+/* Scrollbar invisible pour les colonnes */
+.droppableArea::-webkit-scrollbar { width: 4px; }
+.droppableArea::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }

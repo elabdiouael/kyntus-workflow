@@ -1,0 +1,221 @@
+.container {
+  min-height: 100vh;
+  padding: 40px;
+  display: flex;
+  gap: 40px;
+  perspective: 1500px; /* Profondeur 3D */
+  align-items: flex-start;
+}
+
+/* --- LEFT PANEL: BUILDER --- */
+.builderPanel {
+  flex: 1.5;
+  background: rgba(10, 12, 18, 0.8);
+  border: 1px solid rgba(0, 242, 234, 0.2);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  
+  /* Forme Tech */
+  clip-path: polygon(
+    20px 0, 100% 0, 
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 
+    0 100%, 0 20px
+  );
+  
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  animation: slideInLeft 0.5s ease;
+}
+
+.builderHeader {
+  margin-bottom: 30px;
+  border-bottom: 1px dashed rgba(255,255,255,0.1);
+  padding-bottom: 20px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+  text-shadow: 0 0 20px var(--neon-cyan);
+}
+
+.subtitle {
+  color: #8899a6;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+/* INPUTS 2080 */
+.inputGroup {
+  margin-bottom: 25px;
+}
+
+.label {
+  display: block;
+  color: var(--neon-cyan);
+  font-family: monospace;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.neonInput {
+  width: 100%;
+  padding: 15px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-left: 3px solid var(--neon-cyan); /* Bar Neon gauche */
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.neonInput:focus {
+  background: rgba(0, 242, 234, 0.05);
+  box-shadow: 0 0 20px rgba(0, 242, 234, 0.1);
+}
+
+/* DYNAMIC FIELDS (Les colonnes) */
+.fieldsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Un champ ajouté (Module) */
+.fieldModule {
+  display: flex;
+  gap: 10px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.removeBtn {
+  width: 45px;
+  background: rgba(255, 0, 85, 0.1);
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  color: #ff0055;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+}
+.removeBtn:hover { background: #ff0055; color: white; }
+
+.addBtn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px dashed rgba(255,255,255,0.2);
+  color: #888;
+  cursor: pointer;
+  font-family: monospace;
+  transition: all 0.2s;
+}
+.addBtn:hover {
+  background: rgba(0, 242, 234, 0.1);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+/* SAVE BUTTON (Compile) */
+.saveBtn {
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(90deg, #0070f3, #00c6ff);
+  border: none;
+  color: white;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  cursor: pointer;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  transition: transform 0.2s;
+  box-shadow: 0 0 30px rgba(0, 112, 243, 0.4);
+}
+.saveBtn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 50px rgba(0, 112, 243, 0.6);
+}
+
+/* --- RIGHT PANEL: RACK --- */
+.rackPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: slideInRight 0.5s ease;
+}
+
+.rackHeader {
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  text-align: center;
+  color: #8899a6;
+  font-family: monospace;
+}
+
+/* CARTRIDGE (Template Item) */
+.cartridge {
+  background: rgba(15, 20, 30, 0.9);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  /* Ligne decorative à droite */
+  border-right: 4px solid #333; 
+}
+
+.cartridge:hover {
+  transform: translateX(-10px); /* Sort du rack vers la gauche */
+  border-color: var(--neon-cyan);
+  border-right-color: var(--neon-cyan);
+  box-shadow: -10px 0 30px rgba(0, 242, 234, 0.2);
+  background: rgba(20, 25, 35, 1);
+}
+
+.cartridgeId {
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.cartridgeName {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+}
+
+.cartridgeStatus {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 8px; height: 8px;
+  background: #39ff14;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #39ff14;
+}
+
+/* Scrollbar */
+.fieldsContainer::-webkit-scrollbar { width: 4px; }
+.fieldsContainer::-webkit-scrollbar-thumb { background: #333; }
+
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }

@@ -1,0 +1,214 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  perspective: 1500px; /* Profondeur pour la 3D */
+}
+
+/* --- LE TERMINAL 3D (La forme bizarre) --- */
+.terminal3D {
+  width: 100%;
+  max-width: 650px;
+  position: relative;
+  
+  /* Forme Octogonale Allongée (Cyber Shape) */
+  clip-path: polygon(
+    30px 0, 100% 0, 
+    100% calc(100% - 30px), calc(100% - 30px) 100%, 
+    0 100%, 0 30px
+  );
+  
+  background: rgba(10, 12, 18, 0.85); /* Fond Sombre */
+  border: 1px solid rgba(0, 242, 234, 0.3); /* Bordure Cyan */
+  backdrop-filter: blur(10px);
+  padding: 50px;
+  
+  transform-style: preserve-3d; /* Permet aux enfants de flotter */
+  transition: transform 0.1s ease-out; /* Mouvement fluide avec souris */
+  box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+}
+
+/* Bordures Neon Decoratives (Overlay) */
+.terminalBorder {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(0, 242, 234, 0.2);
+  z-index: 10;
+  clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px);
+}
+
+/* Le Matrix Background Layer */
+.matrixLayer {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  opacity: 0.4;
+  overflow: hidden;
+}
+
+/* Header Flottant */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  transform: translateZ(30px); /* Sort de l'écran */
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px var(--neon-cyan);
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: var(--neon-cyan);
+  font-family: monospace;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  background: rgba(0, 242, 234, 0.1);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+/* --- CUSTOM DROPDOWN (Bye bye <select> moche) --- */
+.customSelect {
+  position: relative;
+  margin-bottom: 30px;
+  transform: translateZ(20px);
+}
+
+.label {
+  display: block;
+  color: #8899a6;
+  font-family: monospace;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+}
+
+.selectTrigger {
+  width: 100%;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s;
+  
+  /* Forme biseautée */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+}
+
+.selectTrigger:hover, .selectTrigger.isOpen {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 242, 234, 0.05);
+  box-shadow: 0 0 20px rgba(0, 242, 234, 0.1);
+}
+
+.optionsMenu {
+  position: absolute;
+  top: 110%; left: 0; width: 100%;
+  background: #02040a;
+  border: 1px solid var(--neon-cyan);
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  animation: slideDown 0.2s ease;
+}
+
+.optionItem {
+  padding: 15px;
+  color: #ccc;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.2s;
+}
+
+.optionItem:hover {
+  background: var(--neon-cyan);
+  color: black;
+  font-weight: bold;
+  padding-left: 25px; /* Petit mouvement */
+}
+
+/* --- UPLOAD ZONE (Holo Pad) --- */
+.dropZone {
+  height: 180px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: translateZ(20px);
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.01),
+    rgba(255,255,255,0.01) 10px,
+    rgba(255,255,255,0.02) 10px,
+    rgba(255,255,255,0.02) 20px
+  );
+}
+
+.dropZone:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: inset 0 0 50px rgba(0, 242, 234, 0.1);
+}
+
+.fileCard {
+  width: 100%;
+  padding: 15px;
+  background: rgba(0, 112, 243, 0.1);
+  border: 1px solid #0070f3;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: monospace;
+  animation: fadeIn 0.3s;
+}
+
+/* --- BUTTON LAUNCH --- */
+.injectBtn {
+  width: 100%;
+  padding: 20px;
+  margin-top: 30px;
+  border: none;
+  background: var(--neon-cyan);
+  color: black;
+  font-weight: 900;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  cursor: pointer;
+  clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px);
+  transition: all 0.2s;
+  transform: translateZ(40px); /* Bouton trés en relief */
+  box-shadow: 0 0 30px rgba(0, 242, 234, 0.4);
+}
+
+.injectBtn:hover {
+  transform: translateZ(40px) scale(1.02);
+  background: white;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.6);
+}
+
+.injectBtn:disabled {
+  background: #333; color: #666; cursor: not-allowed; box-shadow: none;
+}
+
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

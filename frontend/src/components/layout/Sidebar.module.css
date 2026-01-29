@@ -1,0 +1,137 @@
+/* --- CONTAINER GLOBAL --- */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  /* Taille Compacte (Icon Only) */
+  width: 80px; 
+  z-index: 1000;
+  
+  display: flex;
+  flex-direction: column;
+  padding: 30px 15px;
+  
+  /* Glassmorphism Sombre */
+  background: rgba(2, 4, 10, 0.95);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  
+  /* Transition Fluide */
+  transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+}
+
+/* --- HOVER STATE (EXPANSION) --- */
+.sidebar:hover {
+  width: 260px; /* S'ouvre pour montrer le texte */
+  padding: 30px 20px;
+  border-right-color: rgba(0, 242, 234, 0.3);
+  box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+}
+
+/* --- LOGO --- */
+.logoArea {
+  display: flex; align-items: center; gap: 15px; margin-bottom: 50px;
+  padding-left: 5px; height: 40px;
+  white-space: nowrap;
+}
+
+.logoHex {
+  min-width: 40px; height: 40px;
+  background: #00f2ea;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; color: black; font-size: 1.2rem;
+  box-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
+}
+
+.logoText {
+  font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: white;
+  letter-spacing: 2px;
+  opacity: 0; transition: 0.2s; /* Caché par défaut */
+}
+
+.sidebar:hover .logoText { opacity: 1; transition-delay: 0.1s; }
+
+/* --- MENU --- */
+.menu {
+  display: flex; flex-direction: column; gap: 10px; flex: 1;
+}
+
+.menuItem {
+  display: flex; align-items: center; gap: 15px;
+  padding: 12px;
+  color: #666;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  white-space: nowrap;
+  text-decoration: none; /* Important pour Link */
+}
+
+.menuItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.menuItem.active {
+  background: rgba(0, 242, 234, 0.1);
+  color: #00f2ea;
+}
+
+.menuItem svg { min-width: 24px; } /* Icone fixe */
+
+.menuItem span {
+  font-size: 0.9rem; font-weight: 600;
+  opacity: 0; transition: 0.2s;
+}
+
+.sidebar:hover .menuItem span { opacity: 1; }
+
+/* Indicateur Actif (Petit point) */
+.activeDot {
+  width: 6px; height: 6px; background: #00f2ea; border-radius: 50%;
+  box-shadow: 0 0 10px #00f2ea;
+  margin-left: auto; /* Pousse à droite */
+  opacity: 0;
+}
+.sidebar:hover .activeDot { opacity: 1; }
+
+/* --- FOOTER (USER) --- */
+.footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  overflow: hidden;
+}
+
+.userSection {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.avatar {
+  min-width: 36px; height: 36px;
+  background: linear-gradient(135deg, #111, #222);
+  border: 1px solid #333;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: white; font-size: 0.8rem;
+}
+
+.userInfo {
+  opacity: 0; transition: 0.2s; white-space: nowrap;
+}
+.sidebar:hover .userInfo { opacity: 1; }
+
+.userName { font-size: 0.85rem; font-weight: 700; color: white; }
+.userStatus { font-size: 0.65rem; color: #39ff14; font-family: monospace; }
+
+.logoutBtn {
+  background: none; border: none; color: #444; cursor: pointer;
+  transition: 0.2s; min-width: 30px;
+}
+.logoutBtn:hover { color: #ff0055; transform: scale(1.1); }
