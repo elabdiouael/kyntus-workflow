@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, ChevronsUpDown } from "lucide-react";
 import styles from "./LuxSelect.module.css";
 
 interface Option {
@@ -42,12 +42,15 @@ export default function LuxSelect({ label, options, value, onChange, disabled, p
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
         <span className={value ? styles.textVal : styles.placeholder}>
-          {selectedLabel || placeholder || "Sélectionner..."}
+          {selectedLabel || placeholder || "SÉLECTIONNER..."}
         </span>
-        <ChevronDown size={16} className={`${styles.arrow} ${isOpen ? styles.rotated : ''}`} />
         
-        {/* Glow Line en bas */}
-        <div className={styles.glowLine}></div>
+        {/* Icone qui change selon l'état */}
+        {isOpen ? (
+            <ChevronDown size={16} className={styles.rotated} />
+        ) : (
+            <ChevronsUpDown size={14} className={styles.arrow} />
+        )}
       </div>
 
       {isOpen && (
@@ -60,11 +63,11 @@ export default function LuxSelect({ label, options, value, onChange, disabled, p
                 onClick={() => { onChange(opt.value); setIsOpen(false); }}
               >
                 {opt.label}
-                {opt.value === value && <Check size={14} className={styles.check} />}
+                {opt.value === value && <Check size={14} />}
               </div>
             ))
           ) : (
-            <div className={styles.empty}>Aucune donnée</div>
+            <div className={styles.empty}>// NO DATA FOUND</div>
           )}
         </div>
       )}

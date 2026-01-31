@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, CheckCircle, AlertTriangle, Info } from "lucide-react";
+import { X, CheckCircle2, AlertTriangle, Info, Terminal } from "lucide-react";
 import styles from "./Toaster.module.css";
 
-// Petit hack pour écouter les events globaux (comme un Bus)
-// Tu peux trigger ça depuis n'importe où avec window.dispatchEvent
-export const toast = (detail: { message: string, type: 'success'|'error'|'info' }) => {
+// Hack Global Event Bus
+export const toast = (detail: { message: string, type: 'success' | 'error' | 'info' }) => {
   const event = new CustomEvent('kyntus-toast', { detail });
   window.dispatchEvent(event);
 };
@@ -18,8 +17,8 @@ export default function Toaster() {
     const handleToast = (e: any) => {
       const id = Date.now();
       setToasts((prev) => [...prev, { ...e.detail, id }]);
-      
-      // Auto remove
+
+      // Auto remove après 4s (correspond à l'animation CSS)
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, 4000);
@@ -33,20 +32,48 @@ export default function Toaster() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const getIcon = (type: string) => {
+    switch(type) {
+        case 'success': return <CheckCircle2 size={24} color="#39ff14" />;
+        case 'error': return <AlertTriangle size={24} color="#ff0055" />;
+        default: return <Info size={24} color="#00f2ea" />;
+    }
+  };
+
+  const getTitle = (type: string) => {
+      switch(type) {
+          case 'success': return "OPÉRATION RÉUSSIE";
+          case 'error': return "ERREUR CRITIQUE";
+          default: return "NOUVELLE NOTIFICATION";
+      }
+  };
+
   return (
     <div className={styles.container}>
       {toasts.map((t) => (
         <div key={t.id} className={`${styles.toast} ${styles[t.type]}`}>
-          <div className={styles.borderBar}></div>
+          
+          {/* ICON AREA */}
+          <div className={styles.iconSection}>
+             {getIcon(t.type)}
+          </div>
+
+          {/* TEXT AREA */}
           <div className={styles.content}>
              <div className={styles.title}>
-                {t.type === 'success' ? 'TRANSMISSION RECEIVED' : t.type === 'error' ? 'SYSTEM ALERT' : 'INFO'}
+                <Terminal size={12} style={{marginRight: 5}}/>
+                {getTitle(t.type)}
              </div>
              <div className={styles.message}>{t.message}</div>
           </div>
+
+          {/* CLOSE BTN */}
           <button onClick={() => removeToast(t.id)} className={styles.closeBtn}>
-             <X size={16}/>
+             <X size={18}/>
           </button>
+
+          {/* TIMER BAR */}
+          <div className={styles.progressBar}></div>
         </div>
       ))}
     </div>

@@ -1,109 +1,140 @@
-/* --- CONTAINER GLOBAL --- */
+/* src/components/layout/Sidebar.module.css */
+
+/* --- LE RAIL LATÉRAL --- */
 .sidebar {
   position: fixed;
   left: 0;
   top: 0;
   height: 100vh;
-  /* Taille Compacte (Icon Only) */
-  width: 80px; 
+  width: 80px; /* Fermé par défaut */
   z-index: 1000;
   
   display: flex;
   flex-direction: column;
-  padding: 30px 15px;
+  padding: 25px 12px;
   
-  /* Glassmorphism Sombre */
+  /* Glass Sombre & Solide */
   background: rgba(2, 4, 10, 0.95);
   backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(20px);
   
-  /* Transition Fluide */
-  transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 10px 0 40px rgba(0,0,0,0.6);
+  
+  /* Animation d'ouverture */
+  transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   overflow: hidden;
-  box-shadow: 10px 0 30px rgba(0,0,0,0.5);
 }
 
-/* --- HOVER STATE (EXPANSION) --- */
+/* HOVER : L'EXPANSION */
 .sidebar:hover {
-  width: 260px; /* S'ouvre pour montrer le texte */
-  padding: 30px 20px;
-  border-right-color: rgba(0, 242, 234, 0.3);
-  box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+  width: 260px;
+  border-right-color: rgba(0, 242, 234, 0.3); /* Bordure Cyan */
+  box-shadow: 20px 0 60px rgba(0,0,0,0.9), inset -1px 0 0 rgba(0, 242, 234, 0.1);
 }
 
-/* --- LOGO --- */
+/* --- LOGO AREA (HEXAGON) --- */
 .logoArea {
-  display: flex; align-items: center; gap: 15px; margin-bottom: 50px;
-  padding-left: 5px; height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
+  padding-left: 4px;
+  height: 50px;
   white-space: nowrap;
 }
 
 .logoHex {
-  min-width: 40px; height: 40px;
-  background: #00f2ea;
+  min-width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #00f2ea, #0070f3);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex; align-items: center; justify-content: center;
-  font-weight: 900; color: black; font-size: 1.2rem;
+  font-weight: 900; color: black; font-size: 1.5rem;
   box-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
+  animation: pulseLogo 3s infinite;
 }
 
 .logoText {
-  font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 1.4rem;
+  color: white;
   letter-spacing: 2px;
-  opacity: 0; transition: 0.2s; /* Caché par défaut */
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.3s ease;
 }
 
-.sidebar:hover .logoText { opacity: 1; transition-delay: 0.1s; }
+.sidebar:hover .logoText {
+  opacity: 1;
+  transform: translateX(0);
+}
 
-/* --- MENU --- */
+/* --- MENU ITEMS --- */
 .menu {
-  display: flex; flex-direction: column; gap: 10px; flex: 1;
+  display: flex; flex-direction: column; gap: 8px; flex: 1;
 }
 
 .menuItem {
   display: flex; align-items: center; gap: 15px;
-  padding: 12px;
-  color: #666;
+  padding: 12px 14px;
+  color: #8899a6;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
   position: relative;
+  text-decoration: none;
   white-space: nowrap;
-  text-decoration: none; /* Important pour Link */
+  border: 1px solid transparent;
 }
 
+/* Hover Item */
 .menuItem:hover {
   background: rgba(255, 255, 255, 0.05);
   color: white;
+  transform: translateX(5px);
 }
 
+/* Active Item (Le Neon Glow) */
 .menuItem.active {
-  background: rgba(0, 242, 234, 0.1);
+  background: rgba(0, 242, 234, 0.05);
   color: #00f2ea;
+  border-color: rgba(0, 242, 234, 0.2);
+  box-shadow: 0 0 20px rgba(0, 242, 234, 0.05);
 }
 
-.menuItem svg { min-width: 24px; } /* Icone fixe */
-
-.menuItem span {
-  font-size: 0.9rem; font-weight: 600;
-  opacity: 0; transition: 0.2s;
+.menuItem svg {
+  min-width: 22px;
+  filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
 }
 
-.sidebar:hover .menuItem span { opacity: 1; }
-
-/* Indicateur Actif (Petit point) */
-.activeDot {
-  width: 6px; height: 6px; background: #00f2ea; border-radius: 50%;
-  box-shadow: 0 0 10px #00f2ea;
-  margin-left: auto; /* Pousse à droite */
+.itemLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
   opacity: 0;
+  transition: opacity 0.2s 0.1s; /* Petit délai */
 }
-.sidebar:hover .activeDot { opacity: 1; }
+
+.sidebar:hover .itemLabel {
+  opacity: 1;
+}
+
+/* Indicateur Actif (Barre verticale) */
+.activeBar {
+  position: absolute;
+  left: 0;
+  height: 60%;
+  width: 3px;
+  background: #00f2ea;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 10px #00f2ea;
+}
 
 /* --- FOOTER (USER) --- */
 .footer {
   margin-top: auto;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 20px;
   display: flex; align-items: center; justify-content: space-between;
   overflow: hidden;
@@ -114,12 +145,13 @@
 }
 
 .avatar {
-  min-width: 36px; height: 36px;
-  background: linear-gradient(135deg, #111, #222);
+  min-width: 40px; height: 40px;
+  background: #111;
   border: 1px solid #333;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-weight: bold; color: white; font-size: 0.8rem;
+  font-weight: 900; color: white; font-size: 0.9rem;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
 }
 
 .userInfo {
@@ -127,11 +159,33 @@
 }
 .sidebar:hover .userInfo { opacity: 1; }
 
-.userName { font-size: 0.85rem; font-weight: 700; color: white; }
-.userStatus { font-size: 0.65rem; color: #39ff14; font-family: monospace; }
+.userName { font-size: 0.9rem; font-weight: 700; color: white; }
+.userStatus { font-size: 0.65rem; color: #39ff14; font-family: monospace; letter-spacing: 1px; }
 
 .logoutBtn {
-  background: none; border: none; color: #444; cursor: pointer;
-  transition: 0.2s; min-width: 30px;
+  background: rgba(255, 0, 85, 0.1);
+  border: 1px solid #ff0055;
+  color: #ff0055;
+  cursor: pointer;
+  min-width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+  opacity: 0;
+  transform: translateX(20px);
 }
-.logoutBtn:hover { color: #ff0055; transform: scale(1.1); }
+
+.sidebar:hover .logoutBtn {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.logoutBtn:hover {
+  background: #ff0055; color: white; box-shadow: 0 0 15px #ff0055;
+}
+
+@keyframes pulseLogo {
+  0% { box-shadow: 0 0 20px rgba(0, 242, 234, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(0, 242, 234, 0.5); }
+  100% { box-shadow: 0 0 20px rgba(0, 242, 234, 0.2); }
+}

@@ -1,46 +1,86 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Shield, ChevronRight } from "lucide-react";
 import styles from "./Navbar.module.css";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher"; // ✅ Import du Switcher
 
-export default function Navbar({ user }: { user: any }) {
-  const router = useRouter();
+export default function Navbar() {
   const pathname = usePathname();
+  const [user, setUser] = useState<any>(null);
+  const [time, setTime] = useState("");
 
-  const handleLogout = () => {
-    localStorage.removeItem("kyntus_user");
-    router.push("/login");
+  // 1. Get User
+  useEffect(() => {
+    const stored = localStorage.getItem("kyntus_user");
+    if (stored) setUser(JSON.parse(stored));
+  }, []);
+
+  // 2. Live Clock
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date().toLocaleTimeString('fr-FR', { 
+        hour: '2-digit', 
+        minute: '2-digit'
+      }));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // 3. Generate Breadcrumb
+  const getBreadcrumb = () => {
+    if (pathname === "/") return "DASHBOARD";
+    const parts = pathname?.split("/").filter(Boolean) || [];
+    return parts.length > 0 ? parts[parts.length - 1].toUpperCase() : "HOME";
   };
+
+  const section = pathname?.includes("admin") ? "COMMAND" : "WORKSPACE";
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.brand}>
-        🚀 Kyntus<span className={styles.highlight}>Pilot</span>
-      </div>
       
-      <div className={styles.menu}>
-         <Link href="/pilot/board" className={`${styles.link} ${pathname === '/pilot/board' ? styles.active : ''}`}>
-            📝 Mes Tâches
-         </Link>
-         <Link href="/pilot/kanban" className={`${styles.link} ${pathname === '/pilot/kanban' ? styles.active : ''}`}>
-            🏗️ Kanban (Drag)
-         </Link>
-         
-         {/* --- LIEN ACTIVÉ --- */}
-         <Link href="/pilot/history" className={`${styles.link} ${pathname === '/pilot/history' ? styles.active : ''}`}>
-            🕒 Historique
-         </Link>
+      {/* ZONE GAUCHE : LOCALISATION */}
+      <div className={styles.leftZone}>
+        <div className={styles.pathBox}>
+           <span>{section}</span>
+           <ChevronRight size={14} className={styles.separator} />
+           <span className={styles.currentPath}>
+              {getBreadcrumb()}
+           </span>
+        </div>
       </div>
 
-      <div className={styles.userZone}>
-        <div className={styles.userInfo}>
-            <strong>{user?.username}</strong>
-            <span className={styles.role}>{user?.role}</span>
+      {/* ZONE DROITE : OUTILS & STATUTS */}
+      <div className={styles.rightZone}>
+        
+        {/* ✅ SWITCHER DE LANGUE */}
+        <LanguageSwitcher />
+
+        {/* System Status */}
+        <div className={styles.systemStatus}>
+           <div className={styles.pulseDot}></div>
+           NET_LINK: STABLE
         </div>
-        <button onClick={handleLogout} className={styles.logoutBtn}>
-            Déconnexion
-        </button>
+
+        {/* Clock */}
+        <div className={styles.clock}>
+           {time || "--:--"}
+        </div>
+
+        {/* User Mini Profile */}
+        <div className={styles.profile}>
+           <div className={styles.userInfo}>
+              <span className={styles.userName}>{user?.username || "GUEST"}</span>
+              <span className={styles.userRole}>
+                 {user?.role === "ADMIN" ? "LEVEL 5 ACCESS" : "PILOT UNIT"}
+              </span>
+           </div>
+           <div className={styles.avatar}>
+              {user?.role === "ADMIN" ? <Shield size={16}/> : (user?.username?.[0] || "U")}
+           </div>
+        </div>
+
       </div>
     </nav>
   );

@@ -3,20 +3,23 @@
 import { useState, useEffect } from "react";
 import styles from "@/components/features/TemplatesPage.module.css";
 import { useRouter } from "next/navigation";
+import { Plus, Save, Layers, Cpu, Database, Trash2 } from "lucide-react";
+import InteractiveBackground from "@/components/ui/InteractiveBackground";
+import { toast } from "@/components/ui/Toaster";
 
 export default function TemplatesPage() {
   const router = useRouter();
   
-  // State pour le Formulaire
+  // State Formulaire
   const [name, setName] = useState("");
   const [columns, setColumns] = useState<string[]>([]);
   const [currentCol, setCurrentCol] = useState("");
   
-  // State pour la Liste
+  // State Liste
   const [templates, setTemplates] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 1. Charger les templates existants
+  // 1. Initial Load
   useEffect(() => {
     fetchTemplates();
   }, []);
@@ -24,14 +27,15 @@ export default function TemplatesPage() {
   const fetchTemplates = () => {
     fetch("http://localhost:8080/api/templates")
       .then(res => res.json())
-      .then(data => setTemplates(data || []));
+      .then(data => setTemplates(data || []))
+      .catch(err => console.error("Erreur templates:", err));
   };
 
-  // 2. Gestion des Colonnes (Modules)
+  // 2. Gestion des Colonnes
   const addColumn = () => {
     if (!currentCol.trim()) return;
-    setColumns([...columns, currentCol]);
-    setCurrentCol(""); // Reset input
+    setColumns([...columns, currentCol.toUpperCase()]); // On force MAJ pour le style
+    setCurrentCol("");
   };
 
   const removeColumn = (index: number) => {
@@ -45,36 +49,31 @@ export default function TemplatesPage() {
     }
   };
 
-  // 3. Sauvegarder (Compiler)
+  // 3. Sauvegarde
   const handleSave = async () => {
-    // MODIFICATION HNA: Heyydt l condition dyal columns.length === 0
-    // Daba ghir l name li darori
-    if (!name) {
-      alert("ERREUR SYSTEME: Le nom du protocole est obligatoire.");
+    if (!name.trim()) {
+      toast({message: "LE NOM DU PROTOCOLE EST REQUIS", type: "error"});
       return;
     }
 
     setLoading(true);
     try {
-      // Note: L'backend khasso ykoun 9abel 'columns' ola 'fields' vide
       const res = await fetch("http://localhost:8080/api/templates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Kansefto columns wakha tkoun khawya []
         body: JSON.stringify({ name, columns }), 
       });
 
       if (res.ok) {
-        fetchTemplates(); // Refresh liste
+        fetchTemplates();
         setName("");
         setColumns([]);
-        alert("PROTOCOL COMPILED SUCCESSFULLY.");
+        toast({message: "PROTOCOLE INITIALISÉ AVEC SUCCÈS", type: "success"});
       } else {
-        alert("Erreur lors de la sauvegarde.");
+        throw new Error("Erreur serveur");
       }
     } catch (e) {
-      console.error(e);
-      alert("Erreur de connexion au serveur.");
+      toast({message: "ERREUR DE CRÉATION", type: "error"});
     } finally {
       setLoading(false);
     }
@@ -83,120 +82,113 @@ export default function TemplatesPage() {
   return (
     <div className={styles.container}>
       
-      {/* --- LEFT PANEL: CONSTRUCTOR --- */}
+      <InteractiveBackground />
+      
+      {/* --- PANNEAU GAUCHE : CRÉATION --- */ }
       <div className={styles.builderPanel}>
-        <div className={styles.builderHeader}>
-          <h1 className={styles.title}>System Architect</h1>
-          <p className={styles.subtitle}>// DEFINE NEW WORKFLOW PROTOCOLS</p>
-        </div>
+        <div className={styles.contentRelatif}>
+            <div className={styles.builderHeader}>
+              <h1 className={styles.title}>ARCHITECTE SYSTÈME</h1>
+              <span className={styles.subtitle}>// DÉFINITION DES PROTOCOLES DE FLUX</span>
+            </div>
 
-        {/* Name Input */}
-        <div className={styles.inputGroup}>
-          <label className={styles.label}>1. PROTOCOL NAME (TEMPLATE)</label>
-          <input 
-            type="text" 
-            className={styles.neonInput} 
-            placeholder="Ex: FIBER_OPTIC_ROLLOUT_V2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-
-        {/* Columns Builder */}
-        <div className={styles.inputGroup}>
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "baseline"}}>
-            <label className={styles.label}>2. DATA STRUCTURE (OPTIONAL)</label>
-          </div>
-          
-          {/* Message d'aide zedto hna */}
-          <p style={{fontSize: "0.75rem", color: "rgba(255,255,255,0.5)", marginBottom: "10px", fontStyle: "italic"}}>
-            * Leave empty to auto-generate columns from Excel import.
-          </p>
-          
-          {/* Liste des champs ajoutés */}
-          <div className={styles.fieldsContainer}>
-            {columns.map((col, idx) => (
-              <div key={idx} className={styles.fieldModule}>
-                <div style={{
-                    flex: 1, padding: "12px", background: "rgba(255,255,255,0.05)", 
-                    color: "white", fontFamily: "monospace", borderLeft: "2px solid #0070f3"
-                }}>
-                    {col}
-                </div>
-                <button onClick={() => removeColumn(idx)} className={styles.removeBtn}>✕</button>
-              </div>
-            ))}
-          </div>
-
-          {/* Input d'ajout */}
-          <div style={{display: "flex", gap: "10px"}}>
+            {/* Nom du Template */}
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>1. NOM DU PROTOCOLE (PROJET)</label>
               <input 
                 type="text" 
                 className={styles.neonInput} 
-                placeholder="Type field name (e.g., PBO, Address)..."
-                value={currentCol}
-                onChange={(e) => setCurrentCol(e.target.value)}
-                onKeyDown={handleKeyPress}
+                placeholder="Ex: FIBRE_OUJDA_PHASE_1"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
-              <button 
-                onClick={addColumn}
-                style={{
-                    background: "var(--neon-cyan)", border: "none", width: "60px", 
-                    color: "black", fontSize: "1.5rem", fontWeight: "bold", cursor: "pointer"
-                }}
-              >
-                  +
-              </button>
-          </div>
+            </div>
+
+            {/* Structure de Données */}
+            <div className={styles.inputGroup}>
+              <div style={{display: "flex", justifyContent: "space-between", alignItems: "baseline"}}>
+                <label className={styles.label}>2. STRUCTURE DE DONNÉES (CHAMPS DYNAMIQUES)</label>
+              </div>
+              
+              <p style={{fontSize: "0.75rem", color: "rgba(255,255,255,0.5)", marginBottom: "15px", fontStyle: "italic", display:'flex', gap:6, alignItems:'center'}}>
+                <Database size={12} />
+                Laisser vide pour une auto-génération lors de l'import Excel.
+              </p>
+              
+              {/* Zone des Chips */}
+              {columns.length > 0 && (
+                  <div className={styles.fieldsContainer}>
+                    {columns.map((col, idx) => (
+                      <div key={idx} className={styles.fieldModule}>
+                        <span className={styles.fieldText}>{col}</span>
+                        <button onClick={() => removeColumn(idx)} className={styles.removeBtn}><Trash2 size={12}/></button>
+                      </div>
+                    ))}
+                  </div>
+              )}
+
+              {/* Input Ajout */}
+              <div className={styles.addZone}>
+                  <input 
+                    type="text" 
+                    className={styles.neonInput} 
+                    placeholder="Nom du champ (ex: PBO, ADRESSE)..."
+                    value={currentCol}
+                    onChange={(e) => setCurrentCol(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                  />
+                  <button onClick={addColumn} className={styles.addBtn}>
+                      <Plus size={24} strokeWidth={4} />
+                  </button>
+              </div>
+            </div>
+
+            {/* Bouton Action */}
+            <button 
+                className={styles.saveBtn} 
+                onClick={handleSave}
+                disabled={loading}
+            >
+                {loading ? (
+                    <span className="spin">INITIALISATION...</span>
+                ) : (
+                    <span style={{display:"flex", alignItems:"center", justifyContent:"center", gap:10}}>
+                        <Cpu size={20} /> INITIALISER LE PROTOCOLE
+                    </span>
+                )}
+            </button>
         </div>
-
-        {/* Save Action */}
-        <button 
-            className={styles.saveBtn} 
-            onClick={handleSave}
-            disabled={loading}
-        >
-            {loading ? "COMPILING..." : "⚡ COMPILE & SAVE PROTOCOL"}
-        </button>
-
-        {/* Decoration background grid */}
-        <div style={{
-            position: "absolute", top:0, left:0, width:"100%", height:"100%", 
-            backgroundImage: "linear-gradient(rgba(0,242,234,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,234,0.03) 1px, transparent 1px)",
-            backgroundSize: "20px 20px", zIndex: -1, pointerEvents: "none"
-        }}></div>
       </div>
 
 
-      {/* --- RIGHT PANEL: SERVER RACK (LIST) --- */}
+      {/* --- PANNEAU DROITE : LISTE (RACK) --- */}
       <div className={styles.rackPanel}>
          <div className={styles.rackHeader}>
-             Available Protocols: {templates.length}
+             PROTOCOLES ACTIFS : {templates.length}
          </div>
 
-         {/* Liste des Templates */}
          {templates.map((t) => (
              <div key={t.id} className={styles.cartridge}>
-                 <div className={styles.cartridgeStatus}></div>
-                 <div className={styles.cartridgeId}>ID_REF: {t.id.toString().padStart(4, '0')}</div>
-                 <div className={styles.cartridgeName}>{t.name}</div>
-                 <div style={{marginTop: "10px", fontSize: "0.8rem", color: "#666"}}>
-                    fields: {t.columns ? t.columns.length : (t.fields ? t.fields.length : 0)} modules loaded
+                 <div className={styles.led}></div>
+                 
+                 <div className={styles.cartridgeInfo}>
+                     <div>
+                         <div className={styles.idRef}>REF_ID: {t.id.toString().padStart(4, '0')}</div>
+                         <div className={styles.cName}>{t.name}</div>
+                         <div className={styles.cMeta}>
+                            <Layers size={12} /> 
+                            {t.fields?.length || t.columns?.length || 0} MODULES CHARGÉS
+                         </div>
+                     </div>
                  </div>
                  
-                 {/* Delete icon (Optionnel) */}
-                 <div style={{
-                     position: "absolute", bottom: "10px", right: "10px", 
-                     opacity: 0.3, fontSize: "1.5rem"
-                 }}>
-                     💾
-                 </div>
+                 <Save size={20} className={styles.iconSave} />
              </div>
          ))}
 
          {templates.length === 0 && (
-             <div style={{textAlign: "center", color: "#444", marginTop: 20}}>
-                 [ RACK EMPTY ]
+             <div style={{textAlign: "center", color: "#444", marginTop: 40, fontFamily:"monospace"}}>
+                 [ RACK VIDE - AUCUN PROTOCOLE ]
              </div>
          )}
       </div>
