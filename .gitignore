@@ -1,0 +1,14 @@
+target/
+.mvn/
+mvnw
+mvnw.cmd
+.idea/
+**/*.class
+node_modules/
+.next/
+.env
+.env.local
+npm-debug.log
+.DS_Store
+out/
+build/

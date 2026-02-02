@@ -1,0 +1,201 @@
+/* ==========================================================================
+   COMPONENT: PROJECT ROW - "DATA VAULT" EDITION
+   Target: Sci-Fi / Tactical UI
+   ========================================================================== */
+
+.wrapper {
+  margin-bottom: 20px;
+  position: relative;
+  /* Perspective pour l'effet 3D lors de l'ouverture */
+  perspective: 1000px;
+}
+
+/* --- THE ROW STRIP (L'Element Principal) --- */
+.row {
+  /* Glass Dark Base */
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid rgba(255, 255, 255, 0.1); /* Bordure inactive */
+  
+  padding: 24px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  
+  /* Texture Tech en background */
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.01) 10px,
+    rgba(255, 255, 255, 0.01) 12px
+  );
+}
+
+/* --- HOVER STATE: ACTIVATION --- */
+.row:hover {
+  transform: translateX(10px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.2);
+  border-left-color: var(--p-color); /* La couleur s'allume */
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+  
+  /* Shadow Neon */
+  box-shadow: 
+    0 10px 40px -10px rgba(0,0,0,0.8),
+    inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.row.active {
+  background: #0b121e;
+  border-color: var(--p-color);
+  border-left-width: 6px;
+  box-shadow: 0 0 30px -10px var(--p-color);
+  z-index: 10;
+}
+
+/* --- GLITCH TEXT EFFECT --- */
+.title {
+  font-size: 1.35rem; font-weight: 800; color: #f1f5f9;
+  letter-spacing: -0.5px; transition: color 0.3s;
+  position: relative;
+}
+.row:hover .title {
+  color: var(--p-color);
+  text-shadow: 2px 0 rgba(255,0,0,0.5), -2px 0 rgba(0,255,255,0.5);
+}
+
+.meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #64748b;
+  display: flex; gap: 10px; margin-top: 4px;
+}
+.metaTag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
+
+/* --- PROGRESS BAR: "PLASMA TUBE" --- */
+.barContainer {
+  flex: 1; margin: 0 50px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.barLabel {
+  display: flex; justify-content: space-between; font-size: 0.6rem; font-weight: 700; 
+  color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;
+}
+
+.barTrack {
+  width: 100%; height: 8px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px; overflow: hidden;
+  position: relative;
+}
+
+.barFill {
+  height: 100%;
+  background: var(--p-color);
+  box-shadow: 0 0 15px var(--p-color);
+  position: relative;
+}
+
+/* L'animation liquide à l'intérieur de la barre */
+.barFill::after {
+  content: ""; position: absolute; top:0; left:0; right:0; bottom:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+  transform: translateX(-100%);
+  animation: liquidFlow 2.5s infinite ease-in-out;
+}
+
+/* --- STATS PILLS --- */
+.statsGroup {
+  display: flex; gap: 15px; margin-right: 30px;
+}
+.statPill {
+  display: flex; flex-direction: column; align-items: center;
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
+  padding: 5px 12px; border-radius: 6px; min-width: 60px;
+  transition: 0.3s;
+}
+.row:hover .statPill { border-color: var(--p-color); transform: translateY(-3px); }
+
+.statVal { font-weight: 900; font-size: 1.1rem; color: white; line-height: 1; }
+.statLabel { font-size: 0.55rem; font-weight: 700; color: #64748b; margin-top: 2px; }
+
+/* --- CHEVRON ROTATOR --- */
+.chevronBox {
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 1px solid transparent; transition: all 0.4s;
+}
+.row:hover .chevronBox { background: rgba(255,255,255,0.1); border-color: var(--p-color); }
+
+/* --- EXPANDED PANEL (THE VAULT) --- */
+.panel {
+  background: #030509; /* Ultra dark */
+  border-left: 3px solid var(--p-color);
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+.panel.open {
+  max-height: 800px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: inset 0 20px 40px rgba(0,0,0,0.8);
+}
+
+/* Grid Pattern Floor */
+.panel::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none; opacity: 0.5;
+}
+
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px; padding: 40px 50px; position: relative; z-index: 2;
+}
+
+/* --- PILOT CARD (ID CHIP) --- */
+.pilotCard {
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px; padding: 16px;
+  display: flex; flex-direction: column; gap: 14px;
+  transition: 0.3s; position: relative;
+  backdrop-filter: blur(5px);
+}
+.pilotCard:hover {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: var(--p-color);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 10px var(--p-color);
+}
+
+.pHeader { display: flex; align-items: center; gap: 12px; }
+.pAvatar {
+  width: 44px; height: 44px;
+  background: #0f172a; border: 2px solid var(--p-color);
+  color: var(--p-color); font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  clip-path: circle(50%);
+  box-shadow: 0 0 10px var(--p-color);
+}
+.pName { font-size: 0.9rem; font-weight: 700; color: white; }
+.pRole { font-size: 0.65rem; font-family: monospace; color: #94a3b8; letter-spacing: 1px; }
+
+.pStatsGrid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.psItem { text-align: center; }
+.psLbl { font-size: 0.5rem; color: #64748b; font-weight: 700; margin-bottom: 2px; }
+.psVal { font-size: 0.8rem; font-weight: bold; }
+
+/* ANIMATIONS */
+@keyframes liquidFlow {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}

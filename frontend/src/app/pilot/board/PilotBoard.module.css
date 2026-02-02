@@ -1,0 +1,96 @@
+/* src/app/pilot/board/PilotBoard.module.css */
+
+/* =========================================
+   1. GLOBAL COCKPIT CONTAINER
+   ========================================= */
+.container {
+  display: flex; flex-direction: column;
+  min-height: calc(100vh - 80px); /* Hauteur moins la sidebar */
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+  /* Fond semi-transparent pour laisser voir les particules derrière */
+  background-color: rgba(2, 4, 10, 0.6); 
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* =========================================
+   2. TACTICAL RAIL HEADER (LE HUD)
+   ========================================= */
+.headerHud {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; max-width: 1600px; margin: 0 auto 40px auto;
+  padding: 20px 30px;
+  
+  /* Glass Metal Effect */
+  background: rgba(10, 15, 25, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #00f2ea; /* Accent Cyan */
+  border-radius: 4px;
+  
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  animation: slideDown 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pilotInfo { display: flex; flex-direction: column; gap: 5px; }
+
+.pilotName {
+  font-size: 1.2rem; font-weight: 900; color: white;
+  letter-spacing: 2px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+  text-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
+}
+
+.statusDot {
+  width: 8px; height: 8px; background: #39ff14;
+  box-shadow: 0 0 10px #39ff14; border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.roleBadge {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #8899a6;
+  background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px;
+  width: fit-content;
+}
+
+/* Zone Selecteur */
+.selectorZone {
+  display: flex; align-items: center; gap: 20px;
+  background: rgba(0,0,0,0.4); padding: 10px 20px;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+}
+
+.arrowIcon { color: #ff0055; animation: slideRight 1s infinite; }
+
+/* =========================================
+   3. DATA MATRIX (CONTENT AREA)
+   ========================================= */
+.emptyStateWrapper {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 1s ease;
+}
+
+.dataHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 25px; padding: 0 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;
+}
+
+.matrixTitle {
+  color: white; font-weight: 800; font-size: 1.2rem; letter-spacing: 2px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.countBadge {
+  color: #00f2ea; font-family: monospace; font-size: 0.8rem;
+  background: rgba(0, 242, 234, 0.1); padding: 5px 12px; border-radius: 4px;
+  border: 1px solid rgba(0, 242, 234, 0.2);
+}
+
+/* ANIMATIONS */
+@keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes slideRight { 0%, 100% { transform: translateX(0); opacity: 0.5; } 50% { transform: translateX(5px); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } }
