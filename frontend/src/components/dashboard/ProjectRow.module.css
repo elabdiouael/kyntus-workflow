@@ -1,201 +1,359 @@
 /* ==========================================================================
-   COMPONENT: PROJECT ROW - "DATA VAULT" EDITION
-   Target: Sci-Fi / Tactical UI
+   PROJECT ROW MODULE // 2080 TACTICAL HUD
    ========================================================================== */
 
 .wrapper {
-  margin-bottom: 20px;
+  /* Scope Variables based on prop passed from React */
+  --bg-void: #020408;
+  --bg-panel: rgba(10, 15, 25, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --neon-glow: var(--p-color); 
+  
+  margin-bottom: 16px;
   position: relative;
-  /* Perspective pour l'effet 3D lors de l'ouverture */
-  perspective: 1000px;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
-/* --- THE ROW STRIP (L'Element Principal) --- */
+/* --- THE STRIP (MAIN ROW) --- */
 .row {
-  /* Glass Dark Base */
-  background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.9) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 4px solid rgba(255, 255, 255, 0.1); /* Bordure inactive */
-  
-  padding: 24px 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer;
   position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  background: linear-gradient(90deg, rgba(15, 23, 35, 0.9) 0%, rgba(5, 10, 15, 0.95) 100%);
+  border: 1px solid var(--glass-border);
+  border-left: 2px solid var(--glass-border);
+  padding: 20px 30px;
   
-  /* Texture Tech en background */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(10px);
+
+  /* Scanline Texture Overlay */
   background-image: repeating-linear-gradient(
-    45deg,
+    0deg,
     transparent,
-    transparent 10px,
-    rgba(255, 255, 255, 0.01) 10px,
-    rgba(255, 255, 255, 0.01) 12px
+    transparent 2px,
+    rgba(0, 0, 0, 0.2) 2px,
+    rgba(0, 0, 0, 0.2) 4px
   );
 }
 
-/* --- HOVER STATE: ACTIVATION --- */
+/* Row Hover Effects */
 .row:hover {
-  transform: translateX(10px) scale(1.01);
+  transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.2);
-  border-left-color: var(--p-color); /* La couleur s'allume */
-  background: linear-gradient(90deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
-  
-  /* Shadow Neon */
+  border-left-color: var(--p-color);
   box-shadow: 
-    0 10px 40px -10px rgba(0,0,0,0.8),
-    inset 0 0 20px rgba(0,0,0,0.5);
+    0 10px 30px -10px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(255, 255, 255, 0.02);
 }
 
-.row.active {
-  background: #0b121e;
+/* Active State (Open) */
+.active {
+  background: rgba(10, 15, 25, 1);
   border-color: var(--p-color);
-  border-left-width: 6px;
-  box-shadow: 0 0 30px -10px var(--p-color);
-  z-index: 10;
+  border-left-width: 4px;
+  box-shadow: 0 0 25px -5px rgba(var(--p-color), 0.3);
 }
 
-/* --- GLITCH TEXT EFFECT --- */
+/* --- TYPOGRAPHY & META --- */
 .title {
-  font-size: 1.35rem; font-weight: 800; color: #f1f5f9;
-  letter-spacing: -0.5px; transition: color 0.3s;
-  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: text-shadow 0.3s;
 }
+
 .row:hover .title {
-  color: var(--p-color);
-  text-shadow: 2px 0 rgba(255,0,0,0.5), -2px 0 rgba(0,255,255,0.5);
+  color: #fff;
+  text-shadow: 0 0 8px var(--p-color);
 }
 
 .meta {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #64748b;
-  display: flex; gap: 10px; margin-top: 4px;
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
 }
-.metaTag { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
 
-/* --- PROGRESS BAR: "PLASMA TUBE" --- */
-.barContainer {
-  flex: 1; margin: 0 50px;
-  display: flex; flex-direction: column; gap: 6px;
+.metaTag {
+  font-size: 0.65rem;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  letter-spacing: 1px;
 }
+
+/* --- PLASMA BAR (The Progress) --- */
+.barContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 400px;
+}
+
 .barLabel {
-  display: flex; justify-content: space-between; font-size: 0.6rem; font-weight: 700; 
-  color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .barTrack {
-  width: 100%; height: 8px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px; overflow: hidden;
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
   position: relative;
 }
 
 .barFill {
   height: 100%;
   background: var(--p-color);
-  box-shadow: 0 0 15px var(--p-color);
   position: relative;
+  box-shadow: 0 0 10px var(--p-color);
 }
 
-/* L'animation liquide à l'intérieur de la barre */
+/* Liquid Light Animation inside Bar */
 .barFill::after {
-  content: ""; position: absolute; top:0; left:0; right:0; bottom:0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+  content: "";
+  position: absolute;
+  top: 0; left: 0; bottom: 0; width: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.8) 50%, 
+    transparent 100%
+  );
   transform: translateX(-100%);
-  animation: liquidFlow 2.5s infinite ease-in-out;
+  animation: liquidShine 2s infinite ease-in-out;
 }
 
 /* --- STATS PILLS --- */
 .statsGroup {
-  display: flex; gap: 15px; margin-right: 30px;
+  display: flex;
+  gap: 12px;
 }
+
 .statPill {
-  display: flex; flex-direction: column; align-items: center;
-  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
-  padding: 5px 12px; border-radius: 6px; min-width: 60px;
-  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 4px;
+  min-width: 60px;
+  transition: all 0.3s;
 }
-.row:hover .statPill { border-color: var(--p-color); transform: translateY(-3px); }
 
-.statVal { font-weight: 900; font-size: 1.1rem; color: white; line-height: 1; }
-.statLabel { font-size: 0.55rem; font-weight: 700; color: #64748b; margin-top: 2px; }
+.row:hover .statPill {
+  border-color: var(--p-color);
+  background: rgba(0, 0, 0, 0.4);
+}
 
-/* --- CHEVRON ROTATOR --- */
+.statVal {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.5rem;
+  color: #64748b;
+  margin-top: 4px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* --- CHEVRON TRIGGER --- */
 .chevronBox {
-  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; border: 1px solid transparent; transition: all 0.4s;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.3s ease;
 }
-.row:hover .chevronBox { background: rgba(255,255,255,0.1); border-color: var(--p-color); }
 
-/* --- EXPANDED PANEL (THE VAULT) --- */
+.row:hover .chevronBox {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px var(--p-color);
+}
+
+/* ==========================================================================
+   THE VAULT (EXPANDED PANEL)
+   ========================================================================== */
+
 .panel {
-  background: #030509; /* Ultra dark */
-  border-left: 3px solid var(--p-color);
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 0;
+  overflow: hidden;
+  background: #050505;
+  transition: max-height 0.6s cubic-bezier(0.19, 1, 0.22, 1);
   position: relative;
-}
-.panel.open {
-  max-height: 800px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  box-shadow: inset 0 20px 40px rgba(0,0,0,0.8);
+  border-left: 2px solid var(--p-color);
+  margin-left: 10px; /* Indent slightly */
 }
 
-/* Grid Pattern Floor */
+.panel.open {
+  max-height: 1000px; /* Arbitrary high number for animation */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Holo Grid Background */
 .panel::before {
-  content: ""; position: absolute; inset: 0;
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image: 
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none; opacity: 0.5;
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px; padding: 40px 50px; position: relative; z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 30px;
+  position: relative;
+  z-index: 1;
 }
 
-/* --- PILOT CARD (ID CHIP) --- */
+/* --- PILOT CARD (DATA CHIPS) --- */
 .pilotCard {
-  background: rgba(30, 41, 59, 0.3);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 8px; padding: 16px;
-  display: flex; flex-direction: column; gap: 14px;
-  transition: 0.3s; position: relative;
+  background: rgba(20, 25, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
   backdrop-filter: blur(5px);
-}
-.pilotCard:hover {
-  background: rgba(30, 41, 59, 0.6);
-  border-color: var(--p-color);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 10px var(--p-color);
+  transition: transform 0.2s, border-color 0.2s;
+  
+  /* Sci-Fi Cut Corner */
+  clip-path: polygon(
+    0 0, 
+    100% 0, 
+    100% calc(100% - 15px), 
+    calc(100% - 15px) 100%, 
+    0 100%
+  );
 }
 
-.pHeader { display: flex; align-items: center; gap: 12px; }
-.pAvatar {
-  width: 44px; height: 44px;
-  background: #0f172a; border: 2px solid var(--p-color);
-  color: var(--p-color); font-weight: 800;
-  display: flex; align-items: center; justify-content: center;
-  clip-path: circle(50%);
-  box-shadow: 0 0 10px var(--p-color);
+.pilotCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--p-color);
+  background: rgba(20, 25, 40, 0.9);
+  z-index: 2;
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,1);
 }
-.pName { font-size: 0.9rem; font-weight: 700; color: white; }
-.pRole { font-size: 0.65rem; font-family: monospace; color: #94a3b8; letter-spacing: 1px; }
+
+/* Decorative Corner Line */
+.pilotCard::after {
+  content: "";
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 15px; height: 15px;
+  border-left: 1px solid var(--p-color);
+  opacity: 0.5;
+}
+
+.pHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pAvatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--p-color);
+  font-weight: 800;
+  border: 1px solid var(--p-color);
+  box-shadow: 0 0 10px rgba(var(--p-color), 0.2);
+  /* Hexagon Shape optional, keeping square for tactical look */
+}
+
+.pName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pRole {
+  font-size: 0.6rem;
+  color: #64748b;
+  letter-spacing: 1px;
+}
 
 .pStatsGrid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.05);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  padding: 8px 0;
+  margin-top: 5px;
 }
-.psItem { text-align: center; }
-.psLbl { font-size: 0.5rem; color: #64748b; font-weight: 700; margin-bottom: 2px; }
-.psVal { font-size: 0.8rem; font-weight: bold; }
 
-/* ANIMATIONS */
-@keyframes liquidFlow {
+.psItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.psItem:last-child {
+  border-right: none;
+}
+
+.psLbl {
+  font-size: 0.5rem;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.psVal {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes liquidShine {
   0% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
-  100% { transform: translateX(100%); }
+  50%, 100% { transform: translateX(100%); }
+}
+
+/* Mobile Tweaks */
+@media (max-width: 768px) {
+  .row { flex-wrap: wrap; padding: 15px; }
+  .barContainer { order: 3; min-width: 100%; margin: 10px 0; }
+  .statsGroup { flex: 1; }
 }
