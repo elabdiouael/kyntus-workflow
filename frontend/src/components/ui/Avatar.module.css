@@ -1,8 +1,0 @@
-.avatar {
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; background: #0070f3; color: white;
-  font-weight: bold; font-size: 0.8rem;
-}
-.sm { width: 24px; height: 24px; font-size: 0.7rem; }
-.md { width: 32px; height: 32px; }
-.lg { width: 40px; height: 40px; font-size: 1rem; }

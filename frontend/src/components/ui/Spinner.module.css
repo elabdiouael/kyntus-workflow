@@ -1,9 +1,0 @@
-.spinnerWrapper { display: flex; justify-content: center; padding: 20px; }
-.spinner {
-  width: 30px; height: 30px;
-  border: 3px solid rgba(0, 112, 243, 0.3);
-  border-top-color: #0070f3;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }

@@ -4,16 +4,14 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { 
   LayoutGrid, Target, SquareActivity, DatabaseZap, UsersRound, Cpu, LogOut, ScanSearch, FileDown,
-  TableProperties, Map // <--- NEW ICON
+  TableProperties, Map
 } from "lucide-react";
 import styles from "./Sidebar.module.css";
 import { useEffect, useState } from "react";
-import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
-  const { t } = useLanguage();
 
   useEffect(() => {
     const stored = localStorage.getItem("kyntus_user");
@@ -25,17 +23,18 @@ export default function Sidebar() {
       window.location.href = "/login";
   };
 
+  // Noms hardcodés en Anglais (Tech Style)
   const menuItems = [
-    { name: t('sidebar', 'command'), path: "/", icon: LayoutGrid },
-    { name: "Strategic Map", path: "/admin/strategic", icon: Map }, // <--- NEW ITEM (3D)
-    { name: t('sidebar', 'dispatch'), path: "/admin/tasks", icon: Target },
-    { name: t('sidebar', 'tactical'), path: "/admin/kanban", icon: SquareActivity },
-    { name: t('sidebar', 'inspector'), path: "/admin/check", icon: ScanSearch },
-    { name: t('sidebar', 'omni'), path: "/admin/data", icon: TableProperties },
-    { name: t('sidebar', 'export'), path: "/admin/export", icon: FileDown },
-    { name: t('sidebar', 'import'), path: "/import", icon: DatabaseZap },
-    { name: t('sidebar', 'team'), path: "/admin/stats", icon: UsersRound },
-    { name: t('sidebar', 'config'), path: "/admin/templates", icon: Cpu },
+    { name: "Command Center", path: "/", icon: LayoutGrid },
+    { name: "Strategic Map", path: "/admin/strategic", icon: Map },
+    { name: "Task Dispatch", path: "/admin/tasks", icon: Target },
+    { name: "Tactical Board", path: "/admin/kanban", icon: SquareActivity },
+    { name: "Inspector (Audit)", path: "/admin/check", icon: ScanSearch },
+    { name: "Omni-Grid (Data)", path: "/admin/data", icon: TableProperties },
+    { name: "Data Extraction", path: "/admin/export", icon: FileDown },
+    { name: "Data Injection", path: "/import", icon: DatabaseZap },
+    { name: "Team Ops", path: "/admin/stats", icon: UsersRound },
+    { name: "System Config", path: "/admin/templates", icon: Cpu },
   ];
 
   return (
@@ -70,7 +69,7 @@ export default function Sidebar() {
                   <div className={styles.userStatus}>SECURE LINK ●</div>
               </div>
           </div>
-          <button onClick={handleLogout} className={styles.logoutBtn} title={t('sidebar', 'logout')}>
+          <button onClick={handleLogout} className={styles.logoutBtn} title="Disconnect">
               <LogOut size={18} />
           </button>
       </div>

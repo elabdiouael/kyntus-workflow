@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/layout/AppShell";
-import { TransitionProvider } from "@/components/providers/TransitionProvider";
-import { LanguageProvider } from "@/components/providers/LanguageProvider"; // ✅ ZID HADI
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,13 +16,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <LanguageProvider> {/* ✅ WRAP KAMEL */}
-            <TransitionProvider>
-                <AppShell>
-                    {children}
-                </AppShell>
-            </TransitionProvider>
-        </LanguageProvider>
+        {/* Providers supprimés, Design conservé via AppShell */}
+        <AppShell>
+            {children}
+        </AppShell>
       </body>
     </html>
   );
